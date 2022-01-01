@@ -8,7 +8,7 @@ fn main() {
     println!("cargo:rerun-if-changed=wrapper.h");
 
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-    if cfg!(feature = "docs-rs") {
+    if std::env::var("DOCS_RS").is_ok() {
         std::fs::copy("bindings-for-docs-rs.rs", out_path.join("bindings.rs"))
             .expect("Couldn't write bindings!");
     } else {

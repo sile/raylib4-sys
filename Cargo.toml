@@ -12,6 +12,3 @@ categories = ["external-ffi-bindings"]
 
 [build-dependencies]
 bindgen = "0.59"
-
-[package.metadata.docs.rs]
-features = [ "docs-rs" ]
