@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         version: ["4.0.0"]
+        toolchain: [stable, beta]
     steps:
       - name: Git clone raylib
         uses: actions/checkout@v2
@@ -22,15 +23,7 @@ jobs:
         run: sudo apt install -y cmake build-essential libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
       - name: Build raylib
         run: cd raylib && mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=ON .. && make && sudo make install
-  check:
-    name: Check
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toolchain: [stable, beta]
-    needs:
-      - install-raylib
-    steps:
+
       - name: Checkout sources
         uses: actions/checkout@v2
 
@@ -45,61 +38,8 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: check
-          args: --all
-
-  test:
-    name: Test Suite
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toolchain: [stable, beta]
-    needs:
-      - install-raylib
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install ${{ matrix.toolchain }} toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.toolchain }}
-          override: true
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all
-
-  lints:
-    name: Lints
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        toolchain: [stable, beta]
-    needs:
-      - install-raylib
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Install ${{ matrix.toolchain }} toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.toolchain }}
-          override: true
-          components: rustfmt, clippy
-
-      - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
-      - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all -- -D warnings
