@@ -5,12 +5,31 @@ name: CI
 on: [push]
 
 jobs:
+  install-raylib:
+    name: Install Raylib
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: ["4.0.0"]
+    steps:
+      - name: Git clone raylib
+        uses: actions/checkout@v2
+        with:
+          repository: raysan5/raylib
+          path: raylib
+          ref: ${{ matrix.version }}
+      - name: Install packages
+        run: sudo apt install -y cmake build-essential libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
+      - name: Build raylib
+        run: cd raylib && mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=ON .. && make && sudo make install
   check:
     name: Check
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toolchain: [stable, beta, nightly]
+        toolchain: [stable, beta]
+    needs:
+      - install-raylib
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -33,7 +52,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toolchain: [stable, beta, nightly]
+        toolchain: [stable, beta]
+    needs:
+      - install-raylib
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -56,7 +77,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        toolchain: [stable, beta, nightly]
+        toolchain: [stable, beta]
+    needs:
+      - install-raylib
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
