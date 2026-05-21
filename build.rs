@@ -1,5 +1,3 @@
-extern crate bindgen;
-
 use std::env;
 use std::path::PathBuf;
 
@@ -14,7 +12,7 @@ fn main() {
     } else {
         let bindings = bindgen::Builder::default()
             .header("wrapper.h")
-            .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+            .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
             .generate()
             .expect("Unable to generate bindings");
         bindings

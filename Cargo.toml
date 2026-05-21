@@ -11,4 +11,4 @@ readme = "README.md"
 categories = ["external-ffi-bindings"]
 
 [build-dependencies]
-bindgen = "0.59"
+bindgen = "0.71"
