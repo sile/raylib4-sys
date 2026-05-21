@@ -14,7 +14,7 @@ jobs:
         toolchain: [stable, beta]
     steps:
       - name: Git clone raylib
-        uses: actions/checkout@v2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           repository: raysan5/raylib
           path: raylib
@@ -25,21 +25,21 @@ jobs:
         run: cd raylib && mkdir build && cd build && cmake -DBUILD_SHARED_LIBS=ON .. && make && sudo make install
 
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install ${{ matrix.toolchain }} toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@b2417cde72dcf67f306c0ae8e0828a81bf0b189f # v1.0.6
         with:
           profile: minimal
           toolchain: ${{ matrix.toolchain }}
           override: true
 
       - name: Run cargo check
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@ae10961054e4aa8b4aa7dffede299aaf087aa33b # v1.0.1
         with:
           command: check
 
       - name: Run cargo test
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@ae10961054e4aa8b4aa7dffede299aaf087aa33b # v1.0.1
         with:
           command: test
